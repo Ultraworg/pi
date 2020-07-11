@@ -6,9 +6,7 @@ const CONFIG = require('./config.json');
 const updateIP = true;
 
 // Set the path to the pihole custom list file
-const pathToCustomListFile = '/users/thomas/documents/custom.list';
-//const pathToCustomListFile = '/composefiles/piholev5beta/etc-pihole/custom.list';
-
+const pathToCustomListFile = CONFIG.Path;
 //set the authentucation key from the pihole API
 var akey = CONFIG.authkey;
 //set the ip or domain of your pi
