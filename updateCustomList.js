@@ -116,23 +116,47 @@ getPiholeQuery().then((response) => {
     let uniqueYoutubeStrings = [...new Set([...response, ...txtResponse[1]])];
     let ipv4 = txtResponse[2][1];
     let ipv6 = txtResponse[2][0];
+      if (response.length > 0) {
+        getIP(response[response.length-1]).then((IpResponse) => {
+          if(updateIP && IpResponse.length >= 2){
+            ipv4 = IpResponse[1];
+            ipv6 = IpResponse[0];
+          }
+          //write new lines to the file
+          for (var i=0;i<uniqueYoutubeStrings.length;i++) {
+            newDomainsString += ipv4 + ' ' + uniqueYoutubeStrings[i] + '\n';
+            newDomainsString += ipv6 + ' ' + uniqueYoutubeStrings[i] + '\n';
+          }
+          for (var i=0;i<txtResponse[0].length;i++) {
+            newDomainsString += txtResponse[0][i] + '\n';
+          }
+          fs.writeFileSync(pathToCustomListFile, newDomainsString);
+          console.debug('DONE');
+        })
+      } else {
+        // is executed if there was no Youtube Query in the last 10 tenMinutes
+        // still gets a new IP for the old entries
+        let oldDomain = uniqueYoutubeStrings[uniqueYoutubeStrings.length-1];
+        console.log(oldDomain);
+        getIP(oldDomain).then((IpResponse) => {
+          if(updateIP && IpResponse.length >= 2){
+            ipv4 = IpResponse[1];
+            ipv6 = IpResponse[0];
+            console.log(ipv4);
+          }
+          //write new lines to the file
+          for (var i=0;i<uniqueYoutubeStrings.length;i++) {
+            newDomainsString += ipv4 + ' ' + uniqueYoutubeStrings[i] + '\n';
+            newDomainsString += ipv6 + ' ' + uniqueYoutubeStrings[i] + '\n';
+          }
+          for (var i=0;i<txtResponse[0].length;i++) {
+            newDomainsString += txtResponse[0][i] + '\n';
+          }
+          fs.writeFileSync(pathToCustomListFile, newDomainsString);
+          console.debug('DONE');
+        })
+      }
 
-      getIP(response[response.length-1]).then((IpResponse) => {
-        if(updateIP && IpResponse.length >= 2){
-          ipv4 = IpResponse[1];
-          ipv6 = IpResponse[0];
-        }
-        //write new lines to the file
-        for (var i=0;i<uniqueYoutubeStrings.length;i++) {
-          newDomainsString += ipv4 + ' ' + uniqueYoutubeStrings[i] + '\n';
-          newDomainsString += ipv6 + ' ' + uniqueYoutubeStrings[i] + '\n';
-        }
-        for (var i=0;i<txtResponse[0].length;i++) {
-          newDomainsString += txtResponse[0][i] + '\n';
-        }
-        fs.writeFileSync(pathToCustomListFile, newDomainsString);
-        console.debug('DONE');
-      })
     })
 }, function(error) {
   console.error("Failed!", error);
