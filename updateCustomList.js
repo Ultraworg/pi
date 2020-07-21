@@ -137,12 +137,11 @@ getPiholeQuery().then((response) => {
         // is executed if there was no Youtube Query in the last 10 tenMinutes
         // still gets a new IP for the old entries
         let oldDomain = uniqueYoutubeStrings[uniqueYoutubeStrings.length-1];
-        console.log(oldDomain);
+        //console.log(oldDomain);
         getIP(oldDomain).then((IpResponse) => {
           if(updateIP && IpResponse.length >= 2){
             ipv4 = IpResponse[1];
             ipv6 = IpResponse[0];
-            console.log(ipv4);
           }
           //write new lines to the file
           for (var i=0;i<uniqueYoutubeStrings.length;i++) {
