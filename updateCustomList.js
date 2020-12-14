@@ -16,8 +16,8 @@ var youtubeIp = '173.194.187.72';
 var youtubeIp6 = '2a00:1450:4001:62::8';
 // Get current unix time in seconds
 const currentTime = Date.now()/1000;
-// Get unix time eleven minutes ago
-const tenMinutesAgo = currentTime - 660;
+// Get unix time 1 day ago
+const tenMinutesAgo = currentTime - 24*60*60;
 // Create an url to query the pihole API and get all queries from the last 11 minutes
 const url = `http://${piIp}/admin/api.php?getAllQueries&from=${tenMinutesAgo}&until=${currentTime}&auth=${akey}`;
 // Create a regex pattern to match all ad googlevideo urls
@@ -109,14 +109,14 @@ function getIP(host){
   })
 }
 
-
 getPiholeQuery().then((response) => {
   getlines().then( (txtResponse) => {
     let newDomainsString = '';
     let uniqueYoutubeStrings = [...new Set([...response, ...txtResponse[1]])];
-    let ipv4 = txtResponse[2][1];
-    let ipv6 = txtResponse[2][0];
+    
       if (response.length > 0) {
+        let ipv4 = txtResponse[2][1];
+        let ipv6 = txtResponse[2][0]; 
         getIP(response[response.length-1]).then((IpResponse) => {
           if(updateIP && IpResponse.length >= 2){
             ipv4 = IpResponse[1];
